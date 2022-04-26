@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+
+import 'home.dart';
 
 class FacebookLogin extends StatefulWidget {
   const FacebookLogin({Key? key}) : super(key: key);
@@ -8,7 +12,6 @@ class FacebookLogin extends StatefulWidget {
 }
 
 class _FacebookLoginState extends State<FacebookLogin> {
-  String userEmail = '';
 
   @override
   Widget build(BuildContext context) {
@@ -21,27 +24,38 @@ class _FacebookLoginState extends State<FacebookLogin> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Email: '),
-               Text(userEmail),
+
+          Center(
+            child: ElevatedButton(
+                onPressed: (){
+                  signInWithFacebook();
+                  setState(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => Home())
+                    );
+                  });
+                },
+                child: Text('Log in'),
+            ),
+          ),
 
 
-            ],
-          ),
-          ElevatedButton(
-              onPressed: (){},
-              child: Text('Log in'),
-          ),
-
-          ElevatedButton(
-            onPressed: (){},
-            child: Text('Log out'),
-          ),
         ],
       )
 
     );
+  }
+
+
+  Future<UserCredential> signInWithFacebook() async {
+
+    final LoginResult loginResult = await FacebookAuth.instance.login(
+      permissions: [
+        'email', 'public_profile', 'user_birthday'
+      ]
+    );
+
+    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

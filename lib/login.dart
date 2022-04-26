@@ -1,3 +1,4 @@
+import 'package:facebook_login/facebook_login.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
@@ -10,9 +11,14 @@ class Login extends StatelessWidget {
         title: const Text('Flutter Facebook Login'),
         centerTitle: true,
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.only(left:20, top: 50),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => FacebookLogin()
+            ));
+          },
           child: const Text('Sign in with Facebook'),
         ),
       ),
